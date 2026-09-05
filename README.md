@@ -1,13 +1,13 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:1C2730,100:A4763B&height=170&section=header&text=Abhishek%20Verma&fontColor=F2E9DC&fontSize=42&fontAlign=50&fontAlignY=34&desc=Software%20Engineer%20at%20Hakimo%20%C2%B7%20Bangalore&descSize=15&descAlign=50&descAlignY=54">
-  <img width="100%" alt="Abhishek Verma — Software Engineer at Hakimo, Bangalore" src="https://capsule-render.vercel.app/api?type=waving&color=0:8A5E2A,100:BCD2DF&height=170&section=header&text=Abhishek%20Verma&fontColor=FFFFFF&fontSize=42&fontAlign=50&fontAlignY=34&desc=Software%20Engineer%20at%20Hakimo%20%C2%B7%20Bangalore&descSize=15&descAlign=50&descAlignY=54">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/header-dark.svg">
+  <img width="100%" alt="Abhishek Verma — Software Engineer at Hakimo, Bangalore" src="assets/header-light.svg">
 </picture>
 
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=IBM+Plex+Mono&weight=500&size=19&duration=3000&pause=800&color=D8AE72&center=true&vCenter=true&width=560&lines=TypeScript+and+React+at+the+front;Python+and+Flask+behind+it;Most+of+my+time+goes+to+what+runs+unattended">
-  <img alt="TypeScript and React at the front; Python and Flask behind it; most of my time goes to what runs unattended" src="https://readme-typing-svg.demolab.com?font=IBM+Plex+Mono&weight=500&size=19&duration=3000&pause=800&color=8A5E2A&center=true&vCenter=true&width=560&lines=TypeScript+and+React+at+the+front;Python+and+Flask+behind+it;Most+of+my+time+goes+to+what+runs+unattended">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/typing-dark.svg">
+  <img alt="TypeScript and React at the front; Python and Flask behind it; most of my time goes to what runs unattended" src="assets/typing-light.svg">
 </picture>
 
 </div>
@@ -24,15 +24,9 @@
 
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=ts,js,react,tailwind,python,flask,nodejs,express&theme=dark">
-  <img alt="TypeScript, JavaScript, React, Tailwind, Python, Flask, Node.js, Express" src="https://skillicons.dev/icons?i=ts,js,react,tailwind,python,flask,nodejs,express&theme=light">
-</picture>
+<img alt="TypeScript, JavaScript, React, Tailwind, Python, Flask, Node.js, Express" src="assets/tech-a.svg">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=aws,docker,kubernetes,redis,mongodb,linux,git,grafana&theme=dark">
-  <img alt="AWS, Docker, Kubernetes, Redis, MongoDB, Linux, Git, Grafana" src="https://skillicons.dev/icons?i=aws,docker,kubernetes,redis,mongodb,linux,git,grafana&theme=light">
-</picture>
+<img alt="AWS, Docker, Kubernetes, Redis, MongoDB, Linux, Git, Grafana" src="assets/tech-b.svg">
 
 </div>
 
@@ -65,7 +59,10 @@
 
 <br>
 
-<img width="83%" alt="Contribution streak" src="https://streak-stats.demolab.com?user=Abhishek47v&theme=transparent&hide_border=true&border_radius=8&ring=A4763B&fire=A4763B&currStreakLabel=A4763B&dates=8B929C&sideLabels=8B929C&currStreakNum=A4763B&sideNums=8B929C">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://streak-stats.demolab.com?user=Abhishek47v&theme=transparent&hide_border=true&border_radius=8&ring=D8AE72&fire=D8AE72&currStreakNum=DDE5EC&currStreakLabel=D8AE72&sideNums=DDE5EC&sideLabels=B3C0CC&dates=A4B1BE">
+  <img width="83%" alt="Contribution streak" src="https://streak-stats.demolab.com?user=Abhishek47v&theme=transparent&hide_border=true&border_radius=8&ring=8A5E2A&fire=8A5E2A&currStreakNum=1C2730&currStreakLabel=8A5E2A&sideNums=1C2730&sideLabels=414D58&dates=59656F">
+</picture>
 
 </div>
 
@@ -74,7 +71,7 @@
 <div align="center">
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="profile-3d-contrib/profile-night-rainbow.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="profile-3d-contrib/profile-night-green.svg">
   <img width="100%" alt="A 3D view of the last year of contributions" src="profile-3d-contrib/profile-season.svg">
 </picture>
 
@@ -99,6 +96,6 @@
 </div>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:A4763B,100:1C2730&height=110&section=footer">
-  <img width="100%" alt="" src="https://capsule-render.vercel.app/api?type=waving&color=0:BCD2DF,100:8A5E2A&height=110&section=footer">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/footer-dark.svg">
+  <img width="100%" alt="" src="assets/footer-light.svg">
 </picture>
