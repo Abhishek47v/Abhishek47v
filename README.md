@@ -1,6 +1,6 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/header-dark.svg">
-  <img width="100%" alt="Abhishek Verma — Software Engineer at Hakimo, Bangalore" src="assets/header-light.svg">
+  <img width="100%" alt="Abhishek Verma" src="assets/header-light.svg">
 </picture>
 
 <div align="center">
@@ -14,7 +14,7 @@
 
 ## 👨‍💻 About
 
-- 🏢 Software engineer at **[Hakimo](https://www.hakimo.ai)**, building and running production systems for an AI security platform
+- 🏢 Building and running production systems for an AI security platform at **[Hakimo](https://www.hakimo.ai)**
 - ⚙️ Across the stack — data model to API to the interface people use daily
 - 🌙 Most of my time goes to the parts that run **unattended**, where a failure surfaces hours after the thing that caused it
 - 🧪 I care more about how a change is **verified** than how it is written
@@ -24,16 +24,15 @@
 
 <table>
 <tr><td><b>Languages</b></td><td><img alt="TypeScript, Python, JavaScript, Bash" src="assets/tech-languages.svg"></td></tr>
-<tr><td><b>Frontend</b></td><td><img alt="React, Next.js, Astro, Tailwind, Vite, Zustand, HTML, CSS" src="assets/tech-frontend.svg"></td></tr>
-<tr><td><b>Backend &amp; APIs</b></td><td><img alt="Node.js, FastAPI, Express, Django, Flask, Celery" src="assets/tech-backend.svg"></td></tr>
-<tr><td><b>Data &amp; storage</b></td><td><img alt="PostgreSQL, MongoDB, Redis, Prisma, SQLAlchemy" src="assets/tech-data.svg"></td></tr>
+<tr><td><b>Frontend</b></td><td><img alt="React, Next.js, Astro, Tailwind, Vite, HTML, CSS" src="assets/tech-frontend.svg"></td></tr>
+<tr><td><b>Backend &amp; APIs</b></td><td><img alt="Node.js, FastAPI, Express, Django, Flask" src="assets/tech-backend.svg"></td></tr>
+<tr><td><b>Data &amp; storage</b></td><td><img alt="PostgreSQL, MongoDB, Redis, Prisma" src="assets/tech-data.svg"></td></tr>
 <tr><td><b>Infrastructure</b></td><td><img alt="Docker, Kubernetes, Linux, Nginx, AWS, GitHub Actions" src="assets/tech-infra.svg"></td></tr>
-<tr><td><b>Testing &amp; quality</b></td><td><img alt="Playwright, Pytest, Vitest, ESLint" src="assets/tech-testing.svg"></td></tr>
+<tr><td><b>Testing &amp; quality</b></td><td><img alt="Vitest" src="assets/tech-testing.svg"></td></tr>
 <tr><td><b>Observability</b></td><td><img alt="Grafana, Sentry" src="assets/tech-observ.svg"></td></tr>
 <tr><td><b>Workflow</b></td><td><img alt="Git, Postman, Figma, pnpm" src="assets/tech-workflow.svg"></td></tr>
+<tr><td><b>Also</b></td><td><sub>Playwright · Pytest · ESLint · Celery · SQLAlchemy · Zustand · SQL · REST · WebSockets · S3 · CI/CD · axe · structured logging</sub></td></tr>
 </table>
-
-<sub>Also: SQL · REST · WebSockets · S3 · CI/CD · axe · structured logging</sub>
 
 ## 📊 Stats
 
