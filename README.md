@@ -60,8 +60,8 @@
 <br>
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://streak-stats.demolab.com?user=Abhishek47v&theme=transparent&hide_border=true&border_radius=8&ring=D8AE72&fire=D8AE72&currStreakNum=DDE5EC&currStreakLabel=D8AE72&sideNums=DDE5EC&sideLabels=B3C0CC&dates=A4B1BE">
-  <img width="83%" alt="Contribution streak" src="https://streak-stats.demolab.com?user=Abhishek47v&theme=transparent&hide_border=true&border_radius=8&ring=8A5E2A&fire=8A5E2A&currStreakNum=1C2730&currStreakLabel=8A5E2A&sideNums=1C2730&sideLabels=414D58&dates=59656F">
+  <source media="(prefers-color-scheme: dark)" srcset="https://streak-stats.demolab.com?user=Abhishek47v&hide_border=true&border_radius=8&theme=transparent&ring=D8AE72&fire=D8AE72&currStreakLabel=D8AE72&currStreakNum=DDE5EC&sideNums=DDE5EC&sideLabels=B3C0CC&dates=A4B1BE">
+  <img width="83%" alt="Contribution streak" src="https://streak-stats.demolab.com?user=Abhishek47v&hide_border=true&border_radius=8&theme=default">
 </picture>
 
 </div>
