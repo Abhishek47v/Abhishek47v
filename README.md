@@ -22,13 +22,18 @@
 
 ## 🧰 Tech
 
-<div align="center">
+<table>
+<tr><td><b>Languages</b></td><td><img alt="TypeScript, Python, JavaScript, Bash" src="assets/tech-languages.svg"></td></tr>
+<tr><td><b>Frontend</b></td><td><img alt="React, Next.js, Astro, Tailwind, Vite, Zustand, HTML, CSS" src="assets/tech-frontend.svg"></td></tr>
+<tr><td><b>Backend &amp; APIs</b></td><td><img alt="Node.js, FastAPI, Express, Django, Flask, Celery" src="assets/tech-backend.svg"></td></tr>
+<tr><td><b>Data &amp; storage</b></td><td><img alt="PostgreSQL, MongoDB, Redis, Prisma, SQLAlchemy" src="assets/tech-data.svg"></td></tr>
+<tr><td><b>Infrastructure</b></td><td><img alt="Docker, Kubernetes, Linux, Nginx, AWS, GitHub Actions" src="assets/tech-infra.svg"></td></tr>
+<tr><td><b>Testing &amp; quality</b></td><td><img alt="Playwright, Pytest, Vitest, ESLint" src="assets/tech-testing.svg"></td></tr>
+<tr><td><b>Observability</b></td><td><img alt="Grafana, Sentry" src="assets/tech-observ.svg"></td></tr>
+<tr><td><b>Workflow</b></td><td><img alt="Git, Postman, Figma, pnpm" src="assets/tech-workflow.svg"></td></tr>
+</table>
 
-<img alt="TypeScript, JavaScript, React, Tailwind, Python, Flask, Node.js, Express" src="assets/tech-a.svg">
-
-<img alt="AWS, Docker, Kubernetes, Redis, MongoDB, Linux, Git, Grafana" src="assets/tech-b.svg">
-
-</div>
+<sub>Also: SQL · REST · WebSockets · S3 · CI/CD · axe · structured logging</sub>
 
 ## 📊 Stats
 
@@ -77,7 +82,7 @@
 
 </div>
 
-## 📁 Projects
+## 📁 Top 3 Projects
 
 | | What it is | Stack |
 |---|---|---|
