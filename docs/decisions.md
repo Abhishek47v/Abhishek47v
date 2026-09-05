@@ -36,6 +36,10 @@ on the same page. A stats card would duplicate what a visitor can already see tw
 inches lower. The visual budget goes to the thing GitHub does not show: what the
 projects actually are.
 
+What replaces it is the activity section (D-09) — the same question answered with
+what was worked on rather than with a count, and silent when there is nothing to
+say.
+
 ### D-04 · The cards are theme-agnostic, because they have to be clickable
 
 A card is a link. On GitHub you cannot have both a link and a theme switch:
@@ -75,18 +79,57 @@ card's alt text is a full sentence naming the project, what is interesting about
 and its stack — and the opening sentence and the links are plain text. With every
 image stripped, the README still says who this is and what the work is.
 
-### D-07 · No scheduled workflow
+### D-07 · Depth is collapsed, not deleted
 
-The one workflow runs on push, pull request and manual dispatch, with
-`contents: read` and no write permission. It regenerates the cards, compares, and
-checks every colour against both grounds. It never commits.
+The tension is that a profile has to be readable in thirty seconds *and* has to
+survive someone who wants to know whether the work is real. A `<details>` under
+each card resolves it: three cards and a sentence by default, and the problem,
+the decisions and the screenshots for anyone who opens one. Nothing is cut for
+brevity; it is just not in the way.
 
-Nothing here depends on time or on the GitHub API, so a cron job would only produce
-commits that change nothing — noise in the activity graph standing in for activity.
-The generator has no dependencies, so there is nothing to install or cache, and
-`actions/checkout` is pinned to a full commit SHA.
+### D-08 · Two workflows, because only one of them may write
 
-### D-08 · No badges
+`verify.yml` is the gate: push, pull request and manual dispatch, `contents:
+read`, no write permission at all. `activity.yml` is the only thing here that
+commits, and it commits one file.
+
+The earlier version of this repository had no scheduled workflow at all, on the
+grounds that a cron job that changes nothing is noise standing in for activity.
+That still holds for stats cards. It does not hold for the activity section,
+which is genuinely time-varying — so the schedule exists, it is daily rather
+than hourly, and the job exits without committing when nothing changed.
+
+`actions/checkout` is pinned to a full commit SHA in both. The generators have
+no dependencies, so there is nothing to install, cache or resolve.
+
+### D-09 · The activity section renders nothing below a threshold
+
+A stats card answers "is this person working?" with a number, and a small number
+answers it badly. The activity section answers it with *what was worked on*
+instead — but the same trap applies: an empty box is worse than no box.
+
+So `render-readme.mjs` emits nothing at all below `MIN_ITEMS`, and the section
+appears on its own once the window is genuinely busy. Nobody has to remember to
+switch it on, and nobody has to notice it should be switched off.
+
+Failure is non-destructive for the same reason: if the API call fails, whatever
+is already published between the markers is kept. A network blip must never
+blank a section that was fine yesterday.
+
+### D-10 · The gates panel animates its ticks, never its text
+
+The panel showing `npm run verify` first faded whole rows in and back out. That
+meant the box was empty for the first half-second of every seven, and a reader
+arriving at the wrong moment saw nothing at all.
+
+Evidence has to be legible in every frame, so the text is now permanent and only
+the ticks draw themselves in. The worst frame is four passing gates without
+their ticks yet — still true, still readable.
+
+The numbers in it come from a real run (2026-09-05, exit 0). If the suite
+changes, re-run it and update `GATES`, or take the panel down.
+
+### D-11 · No badges
 
 They are near-universal, which means they carry close to zero signal. Three
 projects, each with one specific sentence, say more about judgment than any

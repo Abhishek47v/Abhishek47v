@@ -80,16 +80,6 @@ working pipeline rather than a benchmarked model.
 
 </details>
 <!--START_SECTION:activity-->
-
-### Recently
-
-<table>
-<tr><td><a href="https://github.com/Abhishek47v/portfolio-site"><code>portfolio-site</code></a></td><td>61 commits</td><td><sub>5 Sept</sub></td></tr>
-<tr><td><a href="https://github.com/Abhishek47v/Abhishek47v"><code>Abhishek47v</code></a></td><td>2 commits</td><td><sub>5 Sept</sub></td></tr>
-</table>
-
-<sub>Last 90 days of public commit activity. Regenerated daily.</sub>
-
 <!--END_SECTION:activity-->
 
 [Portfolio](https://my-portfolio.iamabhishekverma.workers.dev) · [LinkedIn](https://www.linkedin.com/in/abhishek-v612/)

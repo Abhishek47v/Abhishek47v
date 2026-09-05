@@ -37,6 +37,9 @@ jobs:
       - name: assets match their generator, and every colour clears 4:1 on both GitHub grounds
         run: node scripts/build-svg.mjs --check
 
+      - name: README matches its template
+        run: node scripts/render-readme.mjs --check
+
       - name: assets are well-formed XML
         run: |
           for f in assets/*.svg; do

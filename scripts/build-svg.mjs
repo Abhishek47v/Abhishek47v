@@ -179,10 +179,80 @@ function card(spec) {
     + `</svg>\n`;
 }
 
+
+/* ------------------------------------------------------------------ gates
+   The four gates of `npm run verify` in portfolio-site, with the numbers from
+   a real run on 2026-09-05 (exit 0). Nothing here is illustrative — if the
+   suite changes, re-run it and update GATES, or take the panel down. It lives
+   inside the portfolio card's <details>, as the evidence for the claim on the
+   card, not at the top of the profile. */
+const GATES = {
+  cmd: 'npm run verify',
+  repo: 'portfolio-site',
+  rows: [
+    ['astro check',  '46 files, 0 errors'],
+    ['tokens gate',  'no colour literal outside tokens.css'],
+    ['astro build',  '2 pages in 1.45s'],
+    ['playwright',   '28 passed in 21.5s'],
+  ],
+};
+const GATE_LOOP = '7s';
+
+function gatesPanel() {
+  const rowY = (i) => 60 + i * 25;
+  /* Each row owns a slice of one shared 7s timeline. Reveal is staggered, the
+     whole set holds lit for the last third, and reduced motion shows the
+     finished run rather than a half-drawn one. */
+  /* The text never animates. Only the ticks draw themselves in, one after the
+     other, and they stay drawn for the rest of the loop.
+
+     The first version faded whole rows in and back out, which meant that for
+     the first half-second of every 7s cycle the panel was an empty box — and a
+     reader arriving at the wrong moment saw exactly that. Evidence has to be
+     legible at every frame, so the reveal moved onto the ticks alone. */
+  const css =
+    `text{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}`
+    + `.c{fill:${C.ink};font-size:13px}`
+    + `.g{fill:${C.ink};font-size:13px}`
+    + `.d{fill:${C.ink};font-size:13px;opacity:.66}`
+    + `.r{fill:${C.ink};font-size:12px;opacity:.55}`
+    + `.tick{fill:none;stroke:${C.accent};stroke-width:1.8;stroke-linecap:round;`
+    + `stroke-linejoin:round;stroke-dasharray:17;stroke-dashoffset:17}`
+    + GATES.rows.map((_, i) =>
+        `.tick${i}{animation:tick${i} ${GATE_LOOP} ease-out infinite}`).join('')
+    + GATES.rows.map((_, i) => {
+        const a = 4 + i * 9;               // this tick starts drawing, in percent
+        return `@keyframes tick${i}{0%,${a}%{stroke-dashoffset:17}`
+             + `${a + 7}%,96%{stroke-dashoffset:0}100%{stroke-dashoffset:17}}`;
+      }).join('')
+    + `@media (prefers-reduced-motion:reduce){`
+    + `.tick{stroke-dashoffset:0}[class^="tick"]{animation:none}}`;
+
+  const rows = GATES.rows.map(([name, detail], i) =>
+    `<g>`
+    + `<path class="tick tick${i}" d="M10,${rowY(i) - 5} l4,4 l7,-8"/>`
+    + `<text class="g" x="32" y="${rowY(i)}">${esc(name)}</text>`
+    + `<text class="d" x="176" y="${rowY(i)}">${esc(detail)}</text>`
+    + `</g>`).join('');
+
+  const alt = `A run of ${GATES.cmd} in ${GATES.repo}, all four gates passing: `
+    + GATES.rows.map(([n, d]) => `${n}, ${d}`).join('; ') + '.';
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} 172" width="${W}" height="172" `
+    + `role="img" aria-label="${esc(alt)}">`
+    + `<style>${css}</style>`
+    + `<rect x=".75" y=".75" width="${W - 1.5}" height="170.5" rx="10" fill="none" stroke="${C.edge}" stroke-opacity=".32"/>`
+    + `<text class="c" x="20" y="30"><tspan fill="${C.accent}">$</tspan> ${esc(GATES.cmd)}</text>`
+    + `<text class="r" x="${W - 20}" y="30" text-anchor="end">${esc(GATES.repo)}</text>`
+    + `<path d="M20,42 H${W - 20}" stroke="${C.edge}" stroke-opacity=".3" stroke-width="1"/>`
+    + rows
+    + `</svg>\n`;
+}
+
 const outputs = CARDS.map((spec) => ({
   path: join(ROOT, 'assets', `${spec.file}.svg`),
   body: card(spec),
-}));
+})).concat([{ path: join(ROOT, 'assets', 'verify-gates.svg'), body: gatesPanel() }]);
 
 if (process.argv.includes('--check')) {
   let failed = false;
