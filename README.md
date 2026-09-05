@@ -7,7 +7,7 @@
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="assets/typing-dark.svg">
-  <img alt="TypeScript and React at the front; Python and Flask behind it; most of my time goes to what runs unattended" src="assets/typing-light.svg">
+  <img alt="TypeScript and React at the front; Python and Flask behind it; most of my time runs unattended" src="assets/typing-light.svg">
 </picture>
 
 </div>
