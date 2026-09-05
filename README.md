@@ -1,97 +1,104 @@
-Software engineer at [Hakimo](https://www.hakimo.ai), in Bangalore. TypeScript and React at the
-front, Python and Flask behind it — most of my time goes to the parts that run unattended.
-
-<table>
-<tr><td><b>Unattended systems</b></td><td>Queues, workers and scheduled paths — the code that fails hours after the thing that caused it, with nobody watching.</td></tr>
-<tr><td><b>Product surfaces</b></td><td>React and TypeScript interfaces people use daily, wired end to end through the API and data model behind them.</td></tr>
-<tr><td><b>Verification</b></td><td>Gates and tests cheap enough to run on every change, instead of once before a release.</td></tr>
-</table>
-
-### Work
-
-[![portfolio-site — a static portfolio that ships zero runtime JavaScript, with 28 Playwright tests holding contrast, keyboard order and the no-JavaScript path across both themes. Astro, TypeScript, Playwright, Cloudflare.](assets/card-portfolio.svg)](https://github.com/Abhishek47v/portfolio-site)
-
-<details>
-<summary>&nbsp;&nbsp;What it looks like, and what holds it up</summary>
-
-<br>
-
-The sky is the page's ground, and the theme chooses which hours you are visiting. Day and night
-are two authored palettes, not an inversion — so the illustration is the same drawing lit twice.
-
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Abhishek47v/Abhishek47v/main/assets/site-dark.png">
-  <img src="assets/site-light.png" width="700" alt="The portfolio's first screen: an illustrated sky over ridges, with the name set large in a serif face.">
+  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:1C2730,100:A4763B&height=170&section=header&text=Abhishek%20Verma&fontColor=F2E9DC&fontSize=42&fontAlign=50&fontAlignY=34&desc=Software%20Engineer%20at%20Hakimo%20%C2%B7%20Bangalore&descSize=15&descAlign=50&descAlignY=54">
+  <img width="100%" alt="Abhishek Verma — Software Engineer at Hakimo, Bangalore" src="https://capsule-render.vercel.app/api?type=waving&color=0:8A5E2A,100:BCD2DF&height=170&section=header&text=Abhishek%20Verma&fontColor=FFFFFF&fontSize=42&fontAlign=50&fontAlignY=34&desc=Software%20Engineer%20at%20Hakimo%20%C2%B7%20Bangalore&descSize=15&descAlign=50&descAlignY=54">
 </picture>
 
-Every colour in the project lives in one file. A gate fails the build if a hex literal appears
-anywhere else, which is what makes retuning the whole day a single-file change. Nothing renders
-that depends on JavaScript — remove it and the site still reads and navigates.
+<div align="center">
 
-That claim is only worth anything if something checks it, so four gates run on every change:
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://readme-typing-svg.demolab.com?font=IBM+Plex+Mono&weight=500&size=19&duration=3000&pause=800&color=D8AE72&center=true&vCenter=true&width=560&lines=TypeScript+and+React+at+the+front;Python+and+Flask+behind+it;Most+of+my+time+goes+to+what+runs+unattended">
+  <img alt="TypeScript and React at the front; Python and Flask behind it; most of my time goes to what runs unattended" src="https://readme-typing-svg.demolab.com?font=IBM+Plex+Mono&weight=500&size=19&duration=3000&pause=800&color=8A5E2A&center=true&vCenter=true&width=560&lines=TypeScript+and+React+at+the+front;Python+and+Flask+behind+it;Most+of+my+time+goes+to+what+runs+unattended">
+</picture>
 
-![A run of npm run verify in portfolio-site, all four gates passing: astro check, 46 files, 0 errors; tokens gate, no colour literal outside tokens.css; astro build, 2 pages in 1.45s; playwright, 28 passed in 21.5s.](assets/verify-gates.svg)
+</div>
 
-`docs/decisions.md` in that repo records what was rejected and why, which is the most useful file in it.
+## 👨‍💻 About
 
-</details>
+- 🏢 Software engineer at **[Hakimo](https://www.hakimo.ai)**, building and running production systems for an AI security platform
+- ⚙️ Across the stack — data model to API to the interface people use daily
+- 🌙 Most of my time goes to the parts that run **unattended**, where a failure surfaces hours after the thing that caused it
+- 🧪 I care more about how a change is **verified** than how it is written
+- 🌐 [my-portfolio.iamabhishekverma.workers.dev](https://my-portfolio.iamabhishekverma.workers.dev)
 
-[![QuipWire — a social app whose real-time messaging keeps presence, delivery and seen receipts correct across two connected clients and a page reload. React, Express, MongoDB, Socket.IO.](assets/card-quipwire.svg)](https://github.com/Abhishek47v/QuipWire-social-media-web)
+## 🧰 Tech
 
-<details>
-<summary>&nbsp;&nbsp;The part that was actually hard</summary>
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=ts,js,react,tailwind,python,flask,nodejs,express&theme=dark">
+  <img alt="TypeScript, JavaScript, React, Tailwind, Python, Flask, Node.js, Express" src="https://skillicons.dev/icons?i=ts,js,react,tailwind,python,flask,nodejs,express&theme=light">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://skillicons.dev/icons?i=aws,docker,kubernetes,redis,mongodb,linux,git,grafana&theme=dark">
+  <img alt="AWS, Docker, Kubernetes, Redis, MongoDB, Linux, Git, Grafana" src="https://skillicons.dev/icons?i=aws,docker,kubernetes,redis,mongodb,linux,git,grafana&theme=light">
+</picture>
+
+</div>
+
+## 📊 Stats
+
+<div align="center">
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=Abhishek47v&theme=github_dark">
+  <img width="100%" alt="Profile summary" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=Abhishek47v&theme=github">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=Abhishek47v&theme=github_dark">
+  <img width="41%" alt="Repositories per language" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=Abhishek47v&theme=github">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=Abhishek47v&theme=github_dark">
+  <img width="41%" alt="Most committed languages" src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=Abhishek47v&theme=github">
+</picture>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=Abhishek47v&theme=github_dark">
+  <img width="41%" alt="GitHub stats" src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=Abhishek47v&theme=github">
+</picture>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=Abhishek47v&theme=github_dark&utcOffset=5.5">
+  <img width="41%" alt="Productive time" src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=Abhishek47v&theme=github&utcOffset=5.5">
+</picture>
 
 <br>
 
-Posts, follows and threaded replies are the easy half. The messaging path is not: the same
-conversation has to stay correct in two places at once.
+<img width="83%" alt="Contribution streak" src="https://streak-stats.demolab.com?user=Abhishek47v&theme=transparent&hide_border=true&border_radius=8&ring=A4763B&fire=A4763B&currStreakLabel=A4763B&dates=8B929C&sideLabels=8B929C&currStreakNum=A4763B&sideNums=8B929C">
 
-- **Presence** is a `userId → socketId` map rebroadcast on every connect and disconnect, so the
-  online set is right after a refresh rather than only after a fresh login.
-- **Read receipts** are a two-step write — mark the unseen messages, then update the
-  conversation's `lastMessage.seen`, then notify the sender on their own socket. That order is
-  what stops the conversation list and the open thread disagreeing about the same message.
-- **Auth** is a signed JWT in an `httpOnly` cookie, so the token is never reachable from client
-  JavaScript.
+</div>
 
-Built in 2024, and it shows in places: scheduled posting exists as a component and an unused
-`node-cron` dependency but was never wired to the model, and the Socket.IO origin is still
-pinned to localhost.
+## 🗓️ Contributions
 
-</details>
+<div align="center">
 
-[![Driver behaviour analysis — a classifier that flags unsafe driving from telemetry, packaged as a Flask service with a container image, Kubernetes manifests and a persistent volume for the trained model. Python, TensorFlow, Flask, Docker, Kubernetes.](assets/card-driver.svg)](https://github.com/Abhishek47v/Driver-behavior-analysis-cnn)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="profile-3d-contrib/profile-night-rainbow.svg">
+  <img width="100%" alt="A 3D view of the last year of contributions" src="profile-3d-contrib/profile-season.svg">
+</picture>
 
-<details>
-<summary>&nbsp;&nbsp;Why the deployment is the interesting part</summary>
+</div>
 
-<br>
+## 📁 Projects
 
-Each row is one driver — age, experience, distraction level, drowsiness score, pulse, speed,
-acceleration — labelled with an unsafe-behaviour flag. A spatial ConvNet classifies it.
+| | What it is | Stack |
+|---|---|---|
+| **[portfolio-site](https://github.com/Abhishek47v/portfolio-site)** | Zero runtime JavaScript, and 28 tests that prove it | Astro · TypeScript · Playwright |
+| **[QuipWire](https://github.com/Abhishek47v/QuipWire-social-media-web)** | Real-time messaging that survives two clients and a reload | React · Express · MongoDB · Socket.IO |
+| **[Driver behaviour analysis](https://github.com/Abhishek47v/Driver-behavior-analysis-cnn)** | A classifier shipped like a service, not a notebook | Python · TensorFlow · Docker · K8s |
 
-The model is deliberately small; the point was getting it off a laptop. It ships as a container
-image with a Compose file for local work and Kubernetes manifests for a cluster, including a
-persistent volume so a trained model survives the pod that produced it.
+## 🤝 Connect
 
-Honest scope: the inputs are tabular, not images, so a gradient-boosted baseline is the right
-comparison and this repo does not make it. No held-out metric is reported either — it is a
-working pipeline rather than a benchmarked model.
+<div align="center">
 
-</details>
-<!--START_SECTION:activity-->
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/abhishek-v612/)
+[![Portfolio](https://img.shields.io/badge/Portfolio-8A5E2A?style=for-the-badge&logo=safari&logoColor=white)](https://my-portfolio.iamabhishekverma.workers.dev)
+[![GitHub](https://img.shields.io/badge/GitHub-1C2730?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Abhishek47v)
 
-### Recently
+</div>
 
-<table>
-<tr><td><a href="https://github.com/Abhishek47v/portfolio-site"><code>portfolio-site</code></a></td><td>61 commits</td><td><sub>5 Sept</sub></td></tr>
-<tr><td><a href="https://github.com/Abhishek47v/Abhishek47v"><code>Abhishek47v</code></a></td><td>2 commits</td><td><sub>5 Sept</sub></td></tr>
-</table>
-
-<sub>Last 90 days of public commit activity. Regenerated daily.</sub>
-
-<!--END_SECTION:activity-->
-
-[Portfolio](https://my-portfolio.iamabhishekverma.workers.dev) · [LinkedIn](https://www.linkedin.com/in/abhishek-v612/)
-
-<sub>This README is rendered from <a href="README.md.tpl">a template</a>; the cards are generated by <a href="scripts/build-svg.mjs">one script</a> and gated in CI on 4:1 contrast against both GitHub themes.</sub>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://capsule-render.vercel.app/api?type=waving&color=0:A4763B,100:1C2730&height=110&section=footer">
+  <img width="100%" alt="" src="https://capsule-render.vercel.app/api?type=waving&color=0:BCD2DF,100:8A5E2A&height=110&section=footer">
+</picture>

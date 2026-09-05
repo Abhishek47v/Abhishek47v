@@ -1,0 +1,50 @@
+# Generates the contribution calendar into profile-3d-contrib/ .
+#
+# This runs as an Action rather than pointing the README at a hosted image
+# because the hosted alternatives are not reliable. Checked 2026-09-06:
+#   github-readme-activity-graph  → 402 DEPLOYMENT_DISABLED (payment required)
+#   github-profile-trophy         → 402 DEPLOYMENT_DISABLED (payment required)
+#   github-readme-stats           → 503 DEPLOYMENT_PAUSED
+# A generated SVG committed here is served from raw.githubusercontent.com and
+# cannot go dark because somebody else's free tier ran out.
+#
+# It commits only when the drawing actually changed, so a quiet day is a no-op.
+
+name: profile-3d
+
+on:
+  schedule:
+    - cron: "23 4 * * *"     # daily, off the hour to avoid the 00:00 stampede
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: profile-3d
+  cancel-in-progress: false   # never interrupt a job that is mid-commit
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: yoshi389111/github-profile-3d-contrib@7d95e7d4cdc028dd1e1cbd957d65f35efb12ae39 # v0.9.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+          TIME_ZONE: Asia/Kolkata
+
+      - name: Commit only if the drawing changed
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- profile-3d-contrib; then
+            echo "no change"
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add profile-3d-contrib
+          git commit -m "chore: refresh contribution calendar"
+          git push
