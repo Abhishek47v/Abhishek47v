@@ -1,32 +1,36 @@
 #!/usr/bin/env node
 /**
- * Builds assets/unattended-{light,dark}.svg from the one spec below.
+ * Builds the project cards in assets/ from the CARDS spec below.
  *
- * Two files exist because GitHub's only reliable theme mechanism for images is
- * <picture> + prefers-color-scheme, which needs a separate file per theme. A
- * media query *inside* the SVG does not work here: an SVG loaded through <img>
- * resolves prefers-color-scheme against the operating system, not against the
- * GitHub theme the reader actually chose, so it is wrong for anyone whose two
- * settings disagree.
+ * WHY THE CARDS ARE THEME-AGNOSTIC (one file, not a light/dark pair)
+ * ------------------------------------------------------------------
+ * A card has to be clickable — it is the link to the project. On GitHub you
+ * cannot have both a link and a theme switch:
  *
- * Two files that must stay identical apart from five colours is a drift
- * problem, so neither file is hand-edited. Both are emitted from PALETTE +
- * one template, and .github/workflows/verify.yml re-runs this script in CI and
- * fails if the committed output differs.
+ *   <a href><picture><source …><img …></picture></a>
  *
- * Constraints the output has to respect, all of them GitHub's:
+ * is rewritten by GitHub's sanitizer into an EMPTY <picture> plus the <img>
+ * ejected into GitHub's own auto-link to the image file. The theme switch and
+ * the link are both lost. Verified against POST /markdown.
+ *
+ * So: one file per card, drawn on a transparent ground, in colours that clear
+ * 3:1 against BOTH GitHub backgrounds (#ffffff and #0d1117). No single colour
+ * can clear 4.5:1 on both — the required luminance bands do not overlap — so
+ * every piece of text here is either large or secondary, and `--check` fails
+ * the build if any colour drifts out of the band.
+ *
+ * OTHER GITHUB CONSTRAINTS THE OUTPUT RESPECTS
  *   - raw.githubusercontent.com serves SVG under
- *     `default-src 'none'; style-src 'unsafe-inline'; sandbox`.
- *     So: inline <style> is allowed, and nothing external may be referenced —
- *     no webfont, no image, no script. Hence a system mono stack.
- *   - Animation is CSS only. Every animation runs on the same 8s timeline with
- *     no animation-delay, so the parts stay phase-locked to each other.
- *   - prefers-reduced-motion *does* resolve correctly here (it is an OS
- *     preference, which is the right source of truth), so the reduce branch
- *     stops everything and settles on the fully-lit end state.
+ *     `default-src 'none'; style-src 'unsafe-inline'; sandbox` — inline <style>
+ *     is fine, but nothing external loads. Hence the system font stacks.
+ *   - Repo-local images are served from /<owner>/<repo>/raw/<branch>/… and are
+ *     never passed through the camo proxy, so they update with the commit.
+ *   - The GitHub mobile apps have a long history of not rendering SVG in a
+ *     README at all, so every card carries its whole meaning in aria-label and
+ *     in the alt text the README gives it.
  *
  * Usage: node scripts/build-svg.mjs [--check]
- *   --check  exit 1 if the files on disk differ from what this would write
+ *   --check  exit 1 if the files on disk differ, or if a colour fails contrast
  */
 
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
@@ -35,193 +39,171 @@ import { dirname, join } from 'node:path';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 
-/* ------------------------------------------------------------------ palette
-   Taken from the portfolio site's tokens.css so the two artefacts read as one
-   identity: a warm bronze accent on slate ink, rather than the blue/neon that
-   every generated profile asset defaults to. */
-const PALETTE = {
-  light: { ink: '#1C2730', soft: '#414D58', faint: '#59656F', accent: '#8A5E2A', rail: '#C4CDD4' },
-  dark:  { ink: '#DDE5EC', soft: '#B3C0CC', faint: '#A4B1BE', accent: '#D8AE72', rail: '#3B4757' },
+/* ---------------------------------------------------------------- palette
+   Tuned so each colour reads on white and on #0d1117. `--check` recomputes
+   the ratios, so a "nicer" colour cannot be dropped in without the build
+   noticing. */
+const C = {
+  /* One ink for every word on the card. Hierarchy is size and weight, never
+     lightness — on a theme-agnostic card lightness INVERTS between themes, so
+     a title darker than its subtitle outranks it on white and is outranked by
+     it on #0d1117. Opacity is the only quieting that behaves the same on both.
+     #737B85 sits at the balance point where the two ratios meet (~4.3:1). */
+  ink:   '#737B85',
+  accent:'#A4763B',   // the one warm note, taken from the portfolio's tokens.css
+  edge:  '#8B929C',   // borders only, always at low opacity
+  day:   '#BCD2DF',   // literal sky colours inside the portfolio glyph — these
+  sun:   '#E8C88B',   // sit on an opaque disc, so contrast does not apply
+  night: '#152238',
+  star:  '#DDE5EC',
+};
+const CONTRAST_EXEMPT = new Set(['day', 'sun', 'night', 'star', 'edge']);
+const MIN_RATIO = 4;   // achievable on both grounds at the balance point
+
+const W = 760;
+const H = 116;
+const GX = 60;   // glyph centre
+const GY = 58;
+const TX = 124;  // text column
+
+/* ------------------------------------------------------------------ cards
+   One line per card, and that line is the *interesting* thing about the
+   project — not a description of it. If a card needs a paragraph to make
+   sense, the card is wrong. */
+const CARDS = [
+  {
+    file: 'card-portfolio',
+    glyph: 'hours',
+    title: 'portfolio-site',
+    line: 'Zero runtime JavaScript, and 28 tests that prove it.',
+    stack: 'Astro · TypeScript · Playwright · Cloudflare',
+    alt: 'portfolio-site — a static portfolio that ships zero runtime JavaScript, with 28 Playwright '
+       + 'tests holding contrast, keyboard order and the no-JavaScript path across both themes. '
+       + 'Astro, TypeScript, Playwright, Cloudflare.',
+  },
+  {
+    file: 'card-quipwire',
+    glyph: 'messages',
+    title: 'QuipWire',
+    line: 'Real-time messaging that survives two clients and a reload.',
+    stack: 'React · Express · MongoDB · Socket.IO',
+    alt: 'QuipWire — a social app whose real-time messaging keeps presence, delivery and seen '
+       + 'receipts correct across two connected clients and a page reload. '
+       + 'React, Express, MongoDB, Socket.IO.',
+  },
+  {
+    file: 'card-driver',
+    glyph: 'classifier',
+    title: 'Driver behaviour analysis',
+    line: 'A classifier shipped like a service, not a notebook.',
+    stack: 'Python · TensorFlow · Flask · Docker · Kubernetes',
+    alt: 'Driver behaviour analysis — a classifier that flags unsafe driving from telemetry, '
+       + 'packaged as a Flask service with a container image, Kubernetes manifests and a persistent '
+       + 'volume for the trained model. Python, TensorFlow, Flask, Docker, Kubernetes.',
+  },
+];
+
+/* ----------------------------------------------------------------- glyphs
+   Each says what the project *is* in 64px, so a card still carries meaning at
+   a phone's scale, where the smaller text does not. */
+const GLYPHS = {
+  // A disc split into day and night with a ridge across it — the portfolio's
+  // own organising idea, which is the passage of hours.
+  hours: () => `
+    <defs><clipPath id="d"><circle cx="${GX}" cy="${GY}" r="27"/></clipPath></defs>
+    <g clip-path="url(#d)">
+      <rect x="${GX - 27}" y="${GY - 27}" width="27" height="54" fill="${C.day}"/>
+      <rect x="${GX}" y="${GY - 27}" width="27" height="54" fill="${C.night}"/>
+      <circle cx="${GX - 13}" cy="${GY - 8}" r="6" fill="${C.sun}"/>
+      <circle cx="${GX + 11}" cy="${GY - 13}" r="1.5" fill="${C.star}"/>
+      <circle cx="${GX + 19}" cy="${GY - 4}" r="1.1" fill="${C.star}"/>
+      <circle cx="${GX + 6}" cy="${GY - 19}" r="1.1" fill="${C.star}"/>
+      <path d="M${GX - 27},${GY + 13} q13,-9 27,-2 q14,7 27,-3 v22 h-54 z" fill="${C.accent}" opacity=".55"/>
+    </g>
+    <circle cx="${GX}" cy="${GY}" r="27" fill="none" stroke="${C.edge}" stroke-opacity=".45" stroke-width="1"/>`,
+
+  // Two bubbles: one still being typed, one delivered and seen.
+  messages: () => `
+    <rect x="${GX - 27}" y="${GY - 25}" width="38" height="24" rx="7" fill="none" stroke="${C.ink}" stroke-width="1.6"/>
+    ${[-16, -8, 0].map((d) => `<circle cx="${GX + d}" cy="${GY - 13}" r="1.8" fill="${C.ink}"/>`).join('')}
+    <rect x="${GX - 11}" y="${GY + 2}" width="38" height="24" rx="7" fill="${C.accent}"/>
+    <path d="M${GX - 3},${GY + 14} l4,4 l7,-8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M${GX + 6},${GY + 14} l4,4 l7,-8" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".7"/>`,
+
+  // A decision boundary with points either side of it.
+  classifier: () => {
+    const safe = [[-20, 12], [-13, 17], [-5, 14], [-18, 3], [-9, 6], [-1, 20]];
+    const flag = [[6, -12], [15, -6], [2, -3], [18, 6], [10, 2]];
+    return `
+    <path d="M${GX - 25},${GY - 24} v48 h50" fill="none" stroke="${C.edge}" stroke-opacity=".5" stroke-width="1.2"/>
+    <path d="M${GX - 22},${GY + 20} L${GX + 22},${GY - 20}" stroke="${C.accent}" stroke-width="1.4" stroke-dasharray="3 3" opacity=".8"/>
+    ${safe.map(([x, y]) => `<circle cx="${GX + x}" cy="${GY + y}" r="2.6" fill="none" stroke="${C.ink}" stroke-width="1.3"/>`).join('')}
+    ${flag.map(([x, y]) => `<circle cx="${GX + x}" cy="${GY + y}" r="2.8" fill="${C.accent}"/>`).join('')}`;
+  },
 };
 
-/* -------------------------------------------------------------------- shape
-   Five stops on one rail. The first two are the attended half — someone is
-   waiting on them. The last three keep running after that person has gone,
-   which is the whole point of the picture. */
-const NODES = [
-  { x: 72,  name: 'interface', sub: 'React · TS' },
-  { x: 224, name: 'api',       sub: 'Flask · Python' },
-  { x: 376, name: 'queue',     sub: 'Redis' },
-  { x: 528, name: 'worker',    sub: 'Docker · K8s' },
-  { x: 680, name: 'store',     sub: 'AWS S3' },
-];
-
-const RAIL_Y = 82;
-
-/* The viewBox is the measured ink box, not a round canvas, so the diagram's
-   leftmost glyph sits flush with the README's left margin instead of floating
-   an inch inside it. Measured with getBBox() over the whole tree with every
-   animation forced visible: x 38.4 → 698.7, y 17 → 158. Re-measure if a node
-   label changes length — a wider label silently clips. */
-const VIEW = { x: 36, y: 11, w: 667, h: 151 };
-const DASH = 30;                       // length of the travelling pulse, px
-const RETURN = 'M528,74 C470,20 150,20 72,74';   // worker → interface, realtime
-
-/* Sampled length of the return cubic. Needed because the pulse is a fixed-length
-   dash swept with stroke-dashoffset, and the sweep range is (dash → -length).
-   pathLength= would normalise this away but would also make the pulse on the
-   long return arc three times the length of the pulse on a rail segment. */
-function cubicLength(p0, p1, p2, p3, steps = 400) {
-  const at = (a, b, c, d, t) => {
-    const u = 1 - t;
-    return u * u * u * a + 3 * u * u * t * b + 3 * u * t * t * c + t * t * t * d;
-  };
-  let len = 0, px = p0[0], py = p0[1];
-  for (let i = 1; i <= steps; i++) {
-    const t = i / steps;
-    const x = at(p0[0], p1[0], p2[0], p3[0], t);
-    const y = at(p0[1], p1[1], p2[1], p3[1], t);
-    len += Math.hypot(x - px, y - py);
-    px = x; py = y;
-  }
-  return len;
+/* --------------------------------------------------------------- contrast
+   WCAG relative luminance, and the ratio against both GitHub grounds. */
+function luminance(hex) {
+  const ch = [1, 3, 5].map((i) => {
+    const v = parseInt(hex.slice(i, i + 2), 16) / 255;
+    return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2];
+}
+function ratio(a, b) {
+  const [x, y] = [luminance(a), luminance(b)].sort((m, n) => n - m);
+  return (x + 0.05) / (y + 0.05);
 }
 
-const RETURN_LEN = cubicLength([528, 74], [470, 20], [150, 20], [72, 74]);
-const SEG_LEN = NODES[1].x - NODES[0].x;
-
-/* ----------------------------------------------------------------- timeline
-   One 8s loop, in percent. Everything below is phase-locked to it.
-
-     0 –  20%  a request runs interface → api → queue
-    22 –  28%  interface and api dim: the request is answered, nobody is watching
-    30 –  50%  the pulse carries on queue → worker → store, at the same pace
-    52 –  84%  the unattended half holds; the bracket names it
-    68 –  84%  a change travels back up the realtime edge
-    84 – 100%  the interface lights again, settling to the frame 0% expects   */
-const LOOP = '8s';
-
-/** A pulse that enters at `from`% and exits at `to`%, and is invisible otherwise. */
-function pulseKeyframes(name, len, from, to) {
-  return `@keyframes ${name}{` +
-    `0%,${from}%{stroke-dashoffset:${DASH};opacity:0}` +
-    `${from + 0.5}%{opacity:1}` +
-    `${to - 0.5}%{opacity:1}` +
-    `${to}%,100%{stroke-dashoffset:${-len};opacity:0}}`;
+function esc(s) {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-/** A node's lit/dim cycle. `stops` is [percent, opacity] pairs; 0% and 100% must match. */
-function nodeKeyframes(name, stops) {
-  return `@keyframes ${name}{` +
-    stops.map(([p, o]) => `${p}%{opacity:${o}}`).join('') + '}';
-}
+function card(spec) {
+  const css =
+    `text{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans",Helvetica,Arial,sans-serif}`
+    + `.t{fill:${C.ink};font-size:22px;font-weight:600}`
+    + `.l{fill:${C.ink};font-size:17px;opacity:.92}`
+    + `.s{fill:${C.ink};font-size:13.5px;opacity:.72;letter-spacing:.02em;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}`;
 
-const DIM = 0.22;   // an unlit node still reads as present, just not active
-const LIT = 1;
-
-const NODE_CYCLES = [
-  // interface: lit, dims once answered, lit again when the change comes back
-  ['n1', [[0, LIT], [22, LIT], [28, DIM], [84, DIM], [90, LIT], [100, LIT]]],
-  // api: dark at the top of the loop, lights on arrival, dims with the interface
-  ['n2', [[0, DIM], [7, DIM], [10, LIT], [22, LIT], [28, DIM], [100, DIM]]],
-  // queue: holds through both halves — it is the seam between them
-  ['n3', [[0, DIM], [17, DIM], [20, LIT], [60, LIT], [66, DIM], [100, DIM]]],
-  ['n4', [[0, DIM], [37, DIM], [40, LIT], [84, LIT], [92, DIM], [100, DIM]]],
-  ['n5', [[0, DIM], [47, DIM], [50, LIT], [76, LIT], [84, DIM], [100, DIM]]],
-];
-
-function svg(theme) {
-  const c = PALETTE[theme];
-
-  const css = [
-    `text{font-family:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;`
-      + `-webkit-font-smoothing:antialiased}`,
-    `.rail{fill:none;stroke:${c.rail};stroke-width:1.25}`,
-    `.arc{fill:none;stroke:${c.rail};stroke-width:1.25;stroke-dasharray:2 4;opacity:.75}`,
-    `.pulse{fill:none;stroke:${c.accent};stroke-width:2;stroke-linecap:round}`,
-    `.ring{fill:none;stroke:${c.soft};stroke-width:1.5}`,
-    `.core{fill:${c.accent}}`,
-    `.name{fill:${c.ink};font-size:12px;letter-spacing:.02em}`,
-    `.sub{fill:${c.faint};font-size:10px;letter-spacing:.02em}`,
-    `.edge-label{fill:${c.faint};font-size:10px;letter-spacing:.09em}`,
-    `.brace{fill:none;stroke:${c.accent};stroke-width:1.25;opacity:.55}`,
-    `.brace-label{fill:${c.accent};font-size:10.5px;letter-spacing:.12em}`,
-    `.node{opacity:${DIM}}`,
-
-    // pulses
-    ...[0, 1, 2, 3].map((i) => `.p${i + 1}{animation:p${i + 1} ${LOOP} linear infinite}`),
-    `.pr{animation:pr ${LOOP} linear infinite}`,
-    ...NODE_CYCLES.map(([n]) => `.${n}{animation:${n} ${LOOP} ease-in-out infinite}`),
-    `.brace-group{opacity:0;animation:brace ${LOOP} ease-in-out infinite}`,
-
-    pulseKeyframes('p1', SEG_LEN, 0, 8),
-    pulseKeyframes('p2', SEG_LEN, 10, 18),
-    pulseKeyframes('p3', SEG_LEN, 30, 38),
-    pulseKeyframes('p4', SEG_LEN, 40, 48),
-    pulseKeyframes('pr', RETURN_LEN.toFixed(1), 68, 84),
-    ...NODE_CYCLES.map(([n, stops]) => nodeKeyframes(n, stops)),
-    `@keyframes brace{0%,30%{opacity:0}38%{opacity:1}76%{opacity:1}84%,100%{opacity:0}}`,
-
-    /* Reduced motion: nothing moves, and the frame that remains is the whole
-       system lit at once. The picture still says what it says; it just says it
-       all at the same time. */
-    `@media (prefers-reduced-motion:reduce){`
-      + `.pulse{animation:none;opacity:0}`
-      + `.node,.brace-group{animation:none;opacity:1}}`,
-  ].join('');
-
-  const rail = `<path class="rail" d="M${NODES[0].x},${RAIL_Y} H${NODES[4].x}"/>`;
-
-  const pulses = NODES.slice(0, 4).map((n, i) =>
-    `<path class="pulse p${i + 1}" d="M${n.x},${RAIL_Y} H${NODES[i + 1].x}" `
-    + `stroke-dasharray="${DASH} ${SEG_LEN}"/>`).join('');
-
-  const returnEdge =
-    `<path class="arc" d="${RETURN}"/>`
-    + `<path class="pulse pr" d="${RETURN}" stroke-dasharray="${DASH} ${RETURN_LEN.toFixed(1)}"/>`
-    + `<text class="edge-label" x="307" y="26" text-anchor="middle">realtime</text>`;
-
-  const nodes = NODES.map((n, i) =>
-    `<g class="node ${NODE_CYCLES[i][0]}">`
-    + `<circle class="ring" cx="${n.x}" cy="${RAIL_Y}" r="5"/>`
-    + `<circle class="core" cx="${n.x}" cy="${RAIL_Y}" r="2.25"/>`
-    + `<text class="name" x="${n.x}" y="${RAIL_Y + 24}" text-anchor="middle">${n.name}</text>`
-    + `<text class="sub" x="${n.x}" y="${RAIL_Y + 39}" text-anchor="middle">${n.sub}</text>`
-    + `</g>`).join('');
-
-  const brace =
-    `<g class="brace-group">`
-    + `<path class="brace" d="M${NODES[2].x},134 v6 H${NODES[4].x} v-6"/>`
-    + `<text class="brace-label" x="528" y="156" text-anchor="middle">RUNS UNATTENDED</text>`
-    + `</g>`;
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" `
-    + `viewBox="${VIEW.x} ${VIEW.y} ${VIEW.w} ${VIEW.h}" width="${VIEW.w}" height="${VIEW.h}" `
-    + `role="img" aria-labelledby="t d">`
-    + `<title id="t">A request, and what happens after it</title>`
-    + `<desc id="d">A request travels from the interface to the API to the queue. The interface and API `
-    + `dim once it has been answered, and the queue, worker and store carry on without them — the part `
-    + `that runs unattended — before a change is pushed back up to the interface over a realtime edge.</desc>`
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" `
+    + `role="img" aria-label="${esc(spec.alt)}">`
     + `<style>${css}</style>`
-    + rail + returnEdge + pulses + nodes + brace
+    + `<rect x=".75" y=".75" width="${W - 1.5}" height="${H - 1.5}" rx="10" fill="none" stroke="${C.edge}" stroke-opacity=".32"/>`
+    + GLYPHS[spec.glyph]()
+    + `<text class="t" x="${TX}" y="44">${esc(spec.title)}</text>`
+    + `<text class="l" x="${TX}" y="72">${esc(spec.line)}</text>`
+    + `<text class="s" x="${TX}" y="97">${esc(spec.stack)}</text>`
+    + `<path d="M726,54 l6,4 l-6,4" fill="none" stroke="${C.accent}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".8"/>`
     + `</svg>\n`;
 }
 
-const outputs = Object.keys(PALETTE).map((theme) => ({
-  path: join(ROOT, 'assets', `unattended-${theme}.svg`),
-  body: svg(theme),
+const outputs = CARDS.map((spec) => ({
+  path: join(ROOT, 'assets', `${spec.file}.svg`),
+  body: card(spec),
 }));
 
 if (process.argv.includes('--check')) {
-  const stale = outputs.filter(
-    (o) => !existsSync(o.path) || readFileSync(o.path, 'utf8') !== o.body,
-  );
-  if (stale.length) {
-    console.error('Committed SVGs are out of date. Run: node scripts/build-svg.mjs');
-    for (const o of stale) console.error(`  ${o.path.replace(ROOT + '/', '')}`);
-    process.exit(1);
+  let failed = false;
+  for (const [name, hex] of Object.entries(C)) {
+    if (CONTRAST_EXEMPT.has(name)) continue;
+    const l = ratio(hex, '#ffffff'), d = ratio(hex, '#0d1117');
+    const ok = l >= MIN_RATIO && d >= MIN_RATIO;
+    console.log(`${ok ? 'ok  ' : 'FAIL'} ${name.padEnd(7)} ${hex}  light ${l.toFixed(2)}:1  dark ${d.toFixed(2)}:1`);
+    if (!ok) failed = true;
   }
-  console.log('assets are in sync with scripts/build-svg.mjs');
+  if (failed) console.error(`\nA colour fails ${MIN_RATIO}:1 on one of GitHub's two backgrounds.`);
+
+  const stale = outputs.filter((o) => !existsSync(o.path) || readFileSync(o.path, 'utf8') !== o.body);
+  if (stale.length) {
+    failed = true;
+    console.error('\nCommitted SVGs are out of date. Run: node scripts/build-svg.mjs');
+    for (const o of stale) console.error(`  ${o.path.replace(ROOT + '/', '')}`);
+  } else {
+    console.log('\nok   assets are in sync with scripts/build-svg.mjs');
+  }
+  process.exit(failed ? 1 : 0);
 } else {
   for (const o of outputs) {
     writeFileSync(o.path, o.body);

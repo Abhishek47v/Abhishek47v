@@ -34,7 +34,7 @@ jobs:
       # Node only for its standard library; the generator has no dependencies,
       # so the runner's preinstalled version is enough and there is nothing to
       # install, cache or resolve.
-      - name: assets match their generator
+      - name: assets match their generator, and every colour clears 4:1 on both GitHub grounds
         run: node scripts/build-svg.mjs --check
 
       - name: assets are well-formed XML
